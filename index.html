@@ -7,7 +7,7 @@
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:#ededed;font-family:Arial,Helvetica,sans-serif;color:#111}
-body{padding-top:64px}
+body{padding-top:14px}
 .page{max-width:900px;margin:auto;background:#fff;min-height:100vh;padding:12px 4px 120px}
 h1{font-size:29px;line-height:1.15;margin:0 8px 18px}
 .meta{display:grid;grid-template-columns:122px minmax(170px,1fr) 66px auto;gap:10px;align-items:center;margin:0 8px}
@@ -15,7 +15,7 @@ h1{font-size:29px;line-height:1.15;margin:0 8px 18px}
 .meta input{width:100%;padding:12px 10px;border:1px solid #777;font-size:19px;background:#fff}
 .dateValue{font-size:18px;font-weight:700;white-space:nowrap;padding-left:4px}
 .bestellerLabel{grid-column:1}.bestellerInput{grid-column:2/5}
-.orderHead{display:flex;align-items:center;justify-content:space-between;margin:22px 6px 8px}
+.orderHead{display:flex;align-items:center;justify-content:space-between;margin:18px 10px 8px}
 .orderHead h2{font-size:26px;margin:0}
 .badge{font-size:15px;font-weight:bold;background:#eee;padding:7px 11px;border-radius:18px}
 .summaryTitleWrap{display:flex;align-items:center;gap:10px}
@@ -54,7 +54,7 @@ button{border:0;border-radius:4px;background:#222;color:#fff;padding:14px;font-s
 .note{font-size:11px;color:#777;margin:9px 6px}
 @media(max-width:600px){
  html,body{width:100%;max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
- body{padding-top:78px}
+ body{padding-top:12px}
  .page{width:100%;max-width:none;margin:0;padding-left:0;padding-right:0;padding-bottom:150px}
  h1{font-size:29px;margin-left:8px;margin-right:8px}
  .meta{grid-template-columns:108px minmax(135px,1fr) 58px auto;gap:7px;margin-left:10px;margin-right:10px}
@@ -81,16 +81,39 @@ button{border:0;border-radius:4px;background:#222;color:#fff;padding:14px;font-s
   .qty{font-size:24px!important}
 }
 
+
+.topHeader{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:0 10px 14px}
+.topHeader h1{margin:0;font-size:29px;line-height:1.1}
+.topDate{font-size:16px;font-weight:700;color:#555;white-space:nowrap;padding-bottom:3px}
+.metaFull{display:grid;grid-template-columns:1fr;gap:6px;margin:0 10px}
+.metaFull label{font-size:18px;font-weight:700;margin-top:3px}
+.metaFull input{width:100%;padding:12px 11px;border:1px solid #777;font-size:20px;background:#fff}
+
+
+@media(max-width:600px){
+  .topHeader{margin:0 10px 12px}
+  .topHeader h1{font-size:30px}
+  .topDate{font-size:15px;padding-bottom:2px}
+  .metaFull{margin:0 10px}
+  .metaFull label{font-size:18px}
+  .metaFull input{font-size:20px;padding:12px 10px}
+}
+
 </style>
 </head>
 <body>
 <div class="page">
-<h1>Bestellliste</h1>
+<div class="topHeader">
+  <h1>Bestellliste</h1>
+  <div id="datumText" class="topDate"></div>
+</div>
 
-<div class="meta">
-<strong>Kommission:</strong><input id="kommission" placeholder="Kommission">
-<strong>Datum:</strong><div id="datumText" class="dateValue"></div>
-<strong class="bestellerLabel">Bestellt von:</strong><input id="besteller" class="bestellerInput" placeholder="Name">
+<div class="metaFull">
+  <label for="kommission">Kommission</label>
+  <input id="kommission" placeholder="Kommission">
+
+  <label for="besteller">Bestellt von</label>
+  <input id="besteller" placeholder="Name">
 </div>
 
 <div class="orderHead">
@@ -133,7 +156,7 @@ button{border:0;border-radius:4px;background:#222;color:#fff;padding:14px;font-s
 </div>
 
 <button id="pdf" class="pdf">PDF ERSTELLEN / DRUCKEN</button>
-<div class="note">V4.3 – Sonstige als Akkordeon · Bestellung ein-/ausblendbar · Header verfeinert.</div>
+
 </div>
 
 <script>
