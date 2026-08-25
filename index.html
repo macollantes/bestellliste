@@ -117,6 +117,18 @@ button{border:0;border-radius:4px;background:#222;color:#fff;padding:14px;font-s
 .signalA{background:#5b8fd0}.signalB{background:#fff}.signalC{background:#f3a23a}.signalD{background:#55a868}
 .signalShield{box-shadow:inset 0 0 0 3px #b8b8b8}
 
+
+/* V4.6 refined signal cable symbols */
+.signalBox{width:58px;height:50px;border:2px solid #777;border-radius:10px;background:#f8f8f8;display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;padding:6px}
+.signalWire{width:12px;height:12px;border-radius:50%;border:1px solid rgba(0,0,0,.25);box-shadow:0 0 0 1px rgba(255,255,255,.35)}
+.signalDouble{width:62px;min-height:52px;border:2px solid #777;border-radius:10px;background:#fafafa;display:flex;flex-direction:column;gap:3px;padding:4px}
+.signalGroup{display:flex;justify-content:center;gap:3px;padding:2px 1px}
+.pairBox{width:62px;min-height:50px;border:2px solid #777;border-radius:10px;background:#fafafa;display:flex;flex-direction:column;justify-content:center;gap:4px;padding:5px}
+.pairBox.kat6{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.pair{display:flex;gap:2px;justify-content:center;align-items:center}
+.twistWire{width:10px;height:28px;border-radius:6px;border:1px solid rgba(0,0,0,.18);transform:rotate(28deg);display:inline-block}
+.signalShield{box-shadow:inset 0 0 0 4px #bfc3c7}
+
 </style>
 </head>
 <body>
@@ -211,33 +223,63 @@ function tDrahtColor(name){
 }
 
 
+
 function cableVisual(name){
  const n=name.toLowerCase();
 
- // Signal/data cables: show pairs/groups rather than a misleading product photo.
- if(n.includes('u72')){
-   let count=n.includes('2×4×') ? 8 : 4;
-   let shield=n.includes('abgeschirmt');
-   let dots='';
-   const cls=['signalA','signalB','signalC','signalB','signalD','signalB','signalA','signalB'];
-   for(let i=0;i<count;i++) dots+='<span class="signalDot '+cls[i]+'"></span>';
-   const tag=n.includes('2×4×')?'2×4×0.8':'1×4×0.8';
-   return '<div class="signalVisual"><div class="signalBox '+(shield?'signalShield':'')+'">'+dots+'</div><div class="cableTag">'+tag+'</div></div>';
- }
- if(n.includes('g51')){
-   let dots='';
-   const cls=['signalA','signalB','signalC','signalB'];
-   for(let i=0;i<4;i++) dots+='<span class="signalDot '+cls[i]+'"></span>';
-   return '<div class="signalVisual"><div class="signalBox">'+dots+'</div><div class="cableTag">2×2×0.8</div></div>';
- }
- if(n.includes('kat.6') || n.includes('4×2×0.78')){
-   let dots='';
-   const cls=['signalA','signalB','signalC','signalB','signalD','signalB','signalA','signalB'];
-   for(let i=0;i<8;i++) dots+='<span class="signalDot '+cls[i]+'"></span>';
-   return '<div class="signalVisual"><div class="signalBox">'+dots+'</div><div class="cableTag">4×2</div></div>';
+ // --- Signal/data cables ---
+ // U72 1×4×0.8: azul, blanco, violeta, turquesa.
+ if(n.includes('u72') && n.includes('1×4×0.8')){
+   const shield=n.includes('abgeschirmt');
+   const wires=[
+     ['#1f5fbf','blau'],
+     ['#f4f4f4','weiss'],
+     ['#7d3fb2','violett'],
+     ['#42c7c7','türkis']
+   ];
+   const dots=wires.map(([c,t])=>'<span class="signalWire" style="background:'+c+'" title="'+t+'"></span>').join('');
+   return '<div class="signalVisual"><div class="signalBox '+(shield?'signalShield':'')+'">'+dots+'</div><div class="cableTag">1×4×0.8</div></div>';
  }
 
- // Power/control cables: use the nomenclature in the order sheet.
+ // U72 2×4×0.8: represent 8 conductors in two visual groups,
+ // following the real cable reference supplied by the user.
+ if(n.includes('u72') && n.includes('2×4×0.8')){
+   const group1=[
+     ['#f4f4f4','weiss'],
+     ['#7d3fb2','violett'],
+     ['#42c7c7','türkis'],
+     ['#f06b2b','orange']
+   ];
+   const group2=[
+     ['#f4f4f4','weiss'],
+     ['#1f5fbf','blau'],
+     ['#42c7c7','türkis'],
+     ['#7d3fb2','violett']
+   ];
+   const g=(arr)=>arr.map(([c,t])=>'<span class="signalWire" style="background:'+c+'" title="'+t+'"></span>').join('');
+   return '<div class="signalVisual"><div class="signalDouble"><div class="signalGroup">'+g(group1)+'</div><div class="signalGroup">'+g(group2)+'</div></div><div class="cableTag">2×4×0.8</div></div>';
+ }
+
+ // G51 2×2×0.8: pair 1 blue/white, pair 2 yellow/white.
+ if(n.includes('g51')){
+   const pair1='<span class="twistWire" style="background:#1f5fbf"></span><span class="twistWire" style="background:#f4f4f4"></span>';
+   const pair2='<span class="twistWire" style="background:#f0cf24"></span><span class="twistWire" style="background:#f4f4f4"></span>';
+   return '<div class="signalVisual"><div class="pairBox"><div class="pair">'+pair1+'</div><div class="pair">'+pair2+'</div></div><div class="cableTag">2×2×0.8</div></div>';
+ }
+
+ // Kat.6: four twisted pairs, using the standard visual colors shown in user's reference image.
+ if(n.includes('kat.6') || n.includes('4×2×0.78')){
+   const pairs=[
+     ['#1f5fbf','#d9e7fb'],
+     ['#ef8a2f','#fde2c8'],
+     ['#3a9b55','#d8f0df'],
+     ['#8b5a2b','#ead9c8']
+   ];
+   const html=pairs.map(([a,b])=>'<div class="pair"><span class="twistWire" style="background:'+a+'"></span><span class="twistWire" style="background:'+b+'"></span></div>').join('');
+   return '<div class="signalVisual"><div class="pairBox kat6">'+html+'</div><div class="cableTag">4×2</div></div>';
+ }
+
+ // --- Power/control cables ---
  if(!(n.includes('kabel') || n.includes('fe0') || n.includes('fe05'))) return null;
 
  let dots=[];
@@ -269,6 +311,7 @@ function cableVisual(name){
  const htmlDots=dots.map(c=>'<span class="coreDot '+c+'"></span>').join('');
  return '<div class="cableVisual"><div class="cableCore '+sheath+'">'+htmlDots+'</div><div class="cableTag">'+tag+'</div></div>';
 }
+
 
 
 function toggleExclusiveAccordion(targetHead,targetBody){
